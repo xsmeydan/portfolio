@@ -301,7 +301,7 @@ export default function ToolkitSection({ toolkit }: ToolkitSectionProps) {
       {/* Hint */}
       <div className="flex justify-center mt-6">
         <span className="font-label-mono text-[10px] uppercase tracking-[0.2em] text-on-surface-variant">
-          Auto rotating · Tap or swipe to explore
+          Auto rotating · <span className="md:hidden">Swipe</span><span className="hidden md:inline">Click a card</span> to explore
         </span>
       </div>
     </section>

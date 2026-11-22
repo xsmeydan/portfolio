@@ -86,6 +86,13 @@
                         </nav>
                 </main>
         </div>
+        <!-- Netlify Forms: static copy of the contact form so Netlify registers it at deploy time -->
+        <form name="contact" data-netlify="true" netlify-honeypot="bot-field" hidden>
+                <input type="text" name="name" />
+                <input type="email" name="email" />
+                <textarea name="message"></textarea>
+                <input type="text" name="bot-field" />
+        </form>
         <script type="module" src="/src/main.tsx"></script>
 </body>
 

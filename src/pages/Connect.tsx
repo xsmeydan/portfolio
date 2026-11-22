@@ -2,6 +2,8 @@ import { useState } from 'react';
 import ConnectShader from '../components/ConnectShader';
 import { usePageMeta } from '../hooks/usePageMeta';
 
+const CONTACT_FORM_NAME = 'contact';
+
 export default function Connect() {
   usePageMeta({
     title: 'Connect | Sudenur Meydan',
@@ -15,16 +17,39 @@ export default function Connect() {
     email: '',
     message: ''
   });
+  const [botField, setBotField] = useState('');
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // TODO: Implement form submission logic
-    alert('Message sent! (This is a demo)');
-    setFormData({ name: '', email: '', message: '' });
+    if (status === 'sending') return;
+    setStatus('sending');
+
+    // Netlify Forms: the static "contact" form in index.html registers the fields at deploy time
+    const body = new URLSearchParams({
+      'form-name': CONTACT_FORM_NAME,
+      'bot-field': botField,
+      ...formData,
+    });
+
+    try {
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body.toString(),
+      });
+
+      if (!response.ok) throw new Error(`Form submission failed: ${response.status}`);
+
+      setStatus('success');
+      setFormData({ name: '', email: '', message: '' });
+    } catch {
+      setStatus('error');
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (status === 'success' || status === 'error') setStatus('idle');
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -83,7 +108,30 @@ export default function Connect() {
           </div>
 
           {/* Contact Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form
+            name={CONTACT_FORM_NAME}
+            method="POST"
+            data-netlify="true"
+            netlify-honeypot="bot-field"
+            onSubmit={handleSubmit}
+            className="space-y-6"
+          >
+            <input type="hidden" name="form-name" value={CONTACT_FORM_NAME} />
+
+            {/* Honeypot: hidden from people, filled in by spam bots */}
+            <p className="hidden" aria-hidden="true">
+              <label>
+                Don&apos;t fill this out:{' '}
+                <input
+                  name="bot-field"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={botField}
+                  onChange={(e) => setBotField(e.target.value)}
+                />
+              </label>
+            </p>
+
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-on-surface mb-2">
                 Name
@@ -95,6 +143,8 @@ export default function Connect() {
                 value={formData.name}
                 onChange={handleChange}
                 required
+                maxLength={100}
+                autoComplete="name"
                 className="w-full px-4 py-3 bg-surface border border-outline-variant rounded-lg 
                          text-on-surface focus:outline-none focus:ring-2 focus:ring-primary 
                          focus:border-transparent transition-all"
@@ -113,6 +163,9 @@ export default function Connect() {
                 value={formData.email}
                 onChange={handleChange}
                 required
+                maxLength={200}
+                autoComplete="email"
+                inputMode="email"
                 className="w-full px-4 py-3 bg-surface border border-outline-variant rounded-lg 
                          text-on-surface focus:outline-none focus:ring-2 focus:ring-primary 
                          focus:border-transparent transition-all"
@@ -130,6 +183,7 @@ export default function Connect() {
                 value={formData.message}
                 onChange={handleChange}
                 required
+                maxLength={5000}
                 rows={5}
                 className="w-full px-4 py-3 bg-surface border border-outline-variant rounded-lg 
                          text-on-surface focus:outline-none focus:ring-2 focus:ring-primary 
@@ -140,12 +194,30 @@ export default function Connect() {
 
             <button
               type="submit"
+              disabled={status === 'sending'}
               className="w-full px-6 py-3 bg-primary text-on-primary font-medium rounded-lg 
                        hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary 
-                       focus:ring-offset-2 transition-all"
+                       focus:ring-offset-2 transition-all disabled:opacity-60 disabled:cursor-wait"
             >
-              Send Message
+              {status === 'sending' ? 'Sending…' : 'Send Message'}
             </button>
+
+            <p role="status" aria-live="polite" className="min-h-[1.5rem] text-sm">
+              {status === 'success' && (
+                <span className="text-primary-container">
+                  Thanks! Your message has been sent. I&apos;ll get back to you soon.
+                </span>
+              )}
+              {status === 'error' && (
+                <span className="text-error">
+                  Something went wrong. Please try again or email me at{' '}
+                  <a href="mailto:sudenurmeydan01@gmail.com" className="underline">
+                    sudenurmeydan01@gmail.com
+                  </a>
+                  .
+                </span>
+              )}
+            </p>
           </form>
         </div>
       </section>

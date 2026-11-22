@@ -1,4 +1,4 @@
-import type { Profile, Project } from "../types";
+import type { Project } from "../types";
 
 const projects: Project[] = [
   {
@@ -47,10 +47,6 @@ const projects: Project[] = [
 ];
 
 export const portfolioApi = {
-  async getProfile(): Promise<Profile> {
-    return {} as Profile;
-  },
-
   async getProjects(): Promise<Project[]> {
     return projects;
   },

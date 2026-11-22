@@ -1,5 +1,21 @@
 import type { Project } from '../types';
+import { Fragment } from 'react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
+
+/**
+ * Lets long camelCase names such as "FenomenSuggestionSystem" wrap at word
+ * boundaries on narrow screens instead of in the middle of a word.
+ */
+function withCamelCaseBreaks(text: string) {
+  // Avoid regex lookbehind: it is a syntax error on older iOS Safari
+  const parts = text.replace(/([a-z])([A-Z])/g, '$1\n$2').split('\n');
+  return parts.map((part, i) => (
+    <Fragment key={i}>
+      {i > 0 && <wbr />}
+      {part}
+    </Fragment>
+  ));
+}
 
 interface WorksSectionProps {
   projects: Project[];
@@ -90,8 +106,8 @@ export default function WorksSection({ projects, loading }: WorksSectionProps) {
                     {project.technologies.slice(0, 3).join(' · ')}
                   </div>
 
-                  <h3 className="font-headline-md text-[30px] leading-[36px] md:font-display-lg-mobile md:text-display-lg-mobile text-primary break-words">
-                    {project.title}
+                  <h3 className="font-headline-md text-[26px] leading-[32px] sm:text-[30px] sm:leading-[36px] md:font-display-lg-mobile md:text-display-lg-mobile text-primary break-words">
+                    {withCamelCaseBreaks(project.title)}
                   </h3>
                 </div>
 

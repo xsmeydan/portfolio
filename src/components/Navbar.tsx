@@ -12,6 +12,7 @@ const links = [
 export default function Navbar() {
   const [activeSection, setActiveSection] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
 
   // Close the mobile menu with Escape
@@ -26,6 +27,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
+      setIsScrolled(window.scrollY > 24);
       const sections = ['work', 'about', 'toolkit', 'experience'];
       const scrollPosition = window.scrollY + 100;
 
@@ -95,20 +97,20 @@ export default function Navbar() {
 
   return (
     <nav
-      className="
+      className={`
         fixed top-4 left-1/2 -translate-x-1/2 z-50
         w-[calc(100%-2rem)]
         max-w-[1100px]
         flex items-center
         px-5 md:px-6
         py-3
-        bg-surface/50
+        ${isScrolled ? 'bg-surface/85' : 'bg-surface/50'}
         backdrop-blur-xl
         rounded-full
         border border-white/10
         shadow-[0_0_40px_rgba(0,219,231,0.1)]
         transition-all duration-500 ease-out
-      "
+      `}
       aria-label="Main navigation"
     >
       {/* Logo */}

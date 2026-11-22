@@ -1,7 +1,16 @@
 import { useState } from 'react';
 
 export default function Blog() {
-  const blogPosts = [
+  const blogPosts: {
+    id: number;
+    title: string;
+    excerpt: string;
+    date: string;
+    readTime: string;
+    category: string;
+    imageUrl: string;
+    link: string | null;
+  }[] = [
     {
       id: 1,
       title: 'Getting Started with Neural Networks',
@@ -20,7 +29,7 @@ export default function Blog() {
       readTime: '8 min read',
       category: 'Backend',
       imageUrl: '/gradient.jpg',
-      link: '/blog/scalable-backend'
+      link: null
     },
     {
       id: 3,
@@ -30,7 +39,7 @@ export default function Blog() {
       readTime: '6 min read',
       category: 'AI',
       imageUrl: '/gradient.jpg',
-      link: '/blog/ai-software-development'
+      link: null
     },
     {
       id: 4,
@@ -40,7 +49,7 @@ export default function Blog() {
       readTime: '4 min read',
       category: 'Best Practices',
       imageUrl: '/gradient.jpg',
-      link: '/blog/clean-code'
+      link: null
     },
     {
       id: 5,
@@ -50,7 +59,7 @@ export default function Blog() {
       readTime: '7 min read',
       category: 'Architecture',
       imageUrl: '/gradient.jpg',
-      link: '/blog/microservices-vs-monolith'
+      link: null
     },
     {
       id: 6,
@@ -60,11 +69,11 @@ export default function Blog() {
       readTime: '6 min read',
       category: 'Database',
       imageUrl: '/gradient.jpg',
-      link: '/blog/database-performance'
+      link: null
     }
   ];
 
-  const categories = ['All', 'Development', 'Backend', 'AI', 'Best Practices', 'Architecture', 'Database'];
+  const categories = ['All', 'Backend', 'AI', 'Best Practices', 'Architecture', 'Database'];
   const [selectedCategory, setSelectedCategory] = useState('All');
 
   const filteredPosts = selectedCategory === 'All' 
@@ -72,10 +81,10 @@ export default function Blog() {
     : blogPosts.filter(post => post.category === selectedCategory);
 
   return (
-    <main className="min-h-screen pt-24 pb-16 px-6">
+    <div className="min-h-screen pt-28 md:pt-32 pb-16 px-6">
       <section className="max-w-[1440px] mx-auto">
-        <div className="text-center mb-16">
-          <h1 className="font-display-2xl text-display-2xl text-primary tracking-tighter text-glow mb-4">
+        <div className="text-center mb-12 md:mb-16">
+          <h1 className="font-display-2xl font-bold text-[52px] leading-[56px] sm:text-[80px] sm:leading-[84px] md:text-display-2xl text-primary tracking-tighter text-glow mb-4">
             Blog
           </h1>
           <p className="text-on-surface-variant text-lg max-w-2xl mx-auto">
@@ -89,7 +98,8 @@ export default function Blog() {
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all
+              aria-pressed={selectedCategory === category}
+              className={`px-4 py-2.5 min-h-[44px] rounded-full text-sm font-medium transition-all
                 ${selectedCategory === category 
                   ? 'bg-primary text-on-primary' 
                   : 'bg-surface text-on-surface-variant hover:bg-surface-variant'
@@ -101,57 +111,64 @@ export default function Blog() {
         </div>
 
         {/* Blog Posts Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 auto-rows-[280px]">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 auto-rows-[300px] md:auto-rows-[280px]">
           {filteredPosts.map((post, i) => {
             const isLarge = i === 0 || i === 3 || i === 4;
 
-            return (
-              <div
-                key={post.id}
-                className={`glass-card rounded-xl overflow-hidden group relative cursor-hover ${
-                  isLarge ? 'md:col-span-2' : 'md:col-span-1'
-                }`}
-              >
-                {post.imageUrl ? (
-                  <img
-                    src={post.imageUrl}
-                    alt={post.title}
-                    className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-90 transition-opacity"
-                  />
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-16 h-16 rounded-2xl border border-secondary/40 flex items-center justify-center text-secondary">
-                      <span className="material-symbols-outlined text-[28px]">
-                        article
-                      </span>
-                    </div>
-                  </div>
-                )}
+            const content = (
+              <>
+                <img
+                  src={post.imageUrl}
+                  alt=""
+                  loading={i < 2 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-90 transition-opacity"
+                />
 
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
 
-                <div className="absolute bottom-0 left-0 p-8 w-full flex items-end justify-between">
-                  <div>
+                <div className="absolute bottom-0 left-0 p-6 md:p-8 w-full flex items-end justify-between gap-4">
+                  <div className="min-w-0">
                     <div className="font-label-mono text-label-mono text-secondary-fixed-dim mb-2 uppercase tracking-widest">
-                      {post.category} · {post.readTime}
+                      {post.category} · {post.link ? post.readTime : 'Coming soon'}
                     </div>
 
-                    <h3 className="font-display-lg-mobile text-display-lg-mobile text-primary">
+                    <h2 className="font-headline-md text-[26px] leading-[32px] md:font-display-lg-mobile md:text-display-lg-mobile text-primary">
                       {post.title}
-                    </h3>
+                    </h2>
+
+                    <p className="font-body-sm text-body-sm text-on-surface-variant mt-2 line-clamp-2">
+                      {post.excerpt}
+                    </p>
                   </div>
 
-                  {i === 0 && (
+                  {post.link && (
                     <div className="w-10 h-10 rounded-full border border-surface-variant flex items-center justify-center text-primary shrink-0 group-hover:bg-primary group-hover:text-background transition-colors">
-                      <a href={post.link} target="_blank" rel="noopener noreferrer">
-                      <span className="material-symbols-outlined text-[18px]">
+                      <span className="material-symbols-outlined text-[18px]" aria-hidden="true">
                         arrow_outward
                       </span>
-                      </a>
                     </div>
                   )}
                 </div>
-              </div>
+              </>
+            );
+
+            const cardClass = `glass-card rounded-xl overflow-hidden group relative block ${
+              isLarge ? 'md:col-span-2' : 'md:col-span-1'
+            }`;
+
+            return post.link ? (
+              <a
+                key={post.id}
+                href={post.link}
+                className={`${cardClass} cursor-hover`}
+              >
+                {content}
+              </a>
+            ) : (
+              <article key={post.id} className={`${cardClass} opacity-70`} aria-disabled="true">
+                {content}
+              </article>
             );
           })}
         </div>
@@ -162,6 +179,6 @@ export default function Blog() {
           </div>
         )}
       </section>
-    </main>
+    </div>
   );
 }

@@ -29,14 +29,19 @@ export default function ExperienceSection({
         Math.min(1, -sectionTop / (sectionHeight - windowHeight))
       );
 
-      // Move robot up/down based on scroll
-      setRobotOffset(scrollProgress * 500 - 250);
+      // Move robot up/down based on scroll (only on desktop, where the column is tall)
+      const travel = window.innerWidth >= 768 ? 500 : 0;
+      setRobotOffset(scrollProgress * travel - travel / 2);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll);
     handleScroll();
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
   }, []);
 
   return (
@@ -45,16 +50,16 @@ export default function ExperienceSection({
         ref.current = el;
         sectionRef.current = el;
       }}
-      className={`py-32 px-6 md:px-16 max-w-[1440px] mx-auto relative z-10 transition-all duration-1000 ease-out ${isVisible
+      className={`py-20 md:py-32 px-6 md:px-16 max-w-[1440px] mx-auto relative z-10 transition-all duration-1000 ease-out ${isVisible
         ? 'opacity-100 translate-y-0'
         : 'opacity-0 translate-y-20'
         }`}
       id="experience"
     >
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-16 items-start">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 items-start">
 
         {/* Robot / 3D Section */}
-        <div className="md:col-span-5 md:col-start-2 relative h-auto min-h-[1100px] order-2 md:order-1">
+        <div className="md:col-span-5 md:col-start-2 relative h-[360px] md:h-auto md:min-h-[1100px] order-2 md:order-1">
           <div className="absolute inset-0 rounded-2xl overflow-hidden">
             <AboutThreeJS />
           </div>
@@ -81,23 +86,23 @@ export default function ExperienceSection({
           <div className="relative pl-8 md:pl-12">
             <div className="timeline-line" />
 
-            <div className="space-y-16">
+            <div className="space-y-12 md:space-y-16">
               {experience.map((item) => (
                 <div
                   key={item.id}
                   className="timeline-node group"
                 >
                   {/* Position */}
-                  <h3 className="font-headline-md text-[24px] text-primary mb-3">
+                  <h3 className="font-headline-md text-[22px] md:text-[24px] text-primary mb-3">
                     {item.position}
                   </h3>
 
                   {/* Company + Logo */}
-                  <div className="flex items-center gap-4 mb-3">
+                  <div className="flex items-start sm:items-center gap-4 mb-3">
                     <img
                       src={item.imageUrl}
                       alt={`${item.company} logo`}
-                      className="w-20 h-20 object-contain rounded-md shrink-0 "
+                      className="w-14 h-14 sm:w-20 sm:h-20 object-contain rounded-md shrink-0"
                     />
                     <div>
                       <span className="font-label-mono text-label-mono text-secondary-container">

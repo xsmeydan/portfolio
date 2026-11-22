@@ -1,6 +1,6 @@
 import type { ToolkitItem } from '../types';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface ToolkitSectionProps {
   toolkit: ToolkitItem[];
@@ -13,9 +13,22 @@ export default function ToolkitSection({ toolkit }: ToolkitSectionProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  // Force visible after a delay to debug
+  const [isCompact, setIsCompact] = useState(
+    () => typeof window !== 'undefined' && window.innerWidth < 768
+  );
+  const touchStartX = useRef<number | null>(null);
+
+  // Fallback in case the intersection observer never fires
   useEffect(() => {
-    setTimeout(() => setForceVisible(true), 1000);
+    const timer = setTimeout(() => setForceVisible(true), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Tighter card spacing on small screens so cards stay inside the viewport
+  useEffect(() => {
+    const onResize = () => setIsCompact(window.innerWidth < 768);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
   }, []);
 
   const next = () => {
@@ -41,7 +54,24 @@ export default function ToolkitSection({ toolkit }: ToolkitSectionProps) {
 
   if (!toolkit.length) return null;
 
-  console.log('ToolkitSection rendering, toolkit length:', toolkit.length, 'current index:', currentIndex, 'isVisible:', isVisible);
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    setIsPaused(true);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const startX = touchStartX.current;
+    touchStartX.current = null;
+    setIsPaused(false);
+    if (startX === null) return;
+
+    const deltaX = e.changedTouches[0].clientX - startX;
+    if (Math.abs(deltaX) < 40) return;
+    if (deltaX < 0) next();
+    else previous();
+  };
+
+  const cardSpacing = isCompact ? 150 : 260;
 
   return (
     <section
@@ -53,7 +83,6 @@ export default function ToolkitSection({ toolkit }: ToolkitSectionProps) {
           ? 'opacity-100 translate-y-0'
           : 'opacity-0 translate-y-20'
         }`}
-      style={{ minHeight: '500px' }}
     >
       {/* Header */}
       <div className="mb-8">
@@ -68,10 +97,12 @@ export default function ToolkitSection({ toolkit }: ToolkitSectionProps) {
 
       {/* Carousel */}
       <div
-        className="relative h-[420px] flex items-center justify-center"
+        className="relative h-[340px] md:h-[420px] flex items-center justify-center overflow-hidden md:overflow-visible touch-pan-y"
         style={{ perspective: '1200px' }}
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
       >
         {/* Left button */}
         <button
@@ -80,6 +111,7 @@ export default function ToolkitSection({ toolkit }: ToolkitSectionProps) {
             absolute left-0 md:left-4 z-30
             w-12 h-12 rounded-full
             border border-surface-variant
+            bg-background/60 backdrop-blur
             flex items-center justify-center
             text-primary
             hover:bg-primary hover:text-background
@@ -118,9 +150,9 @@ export default function ToolkitSection({ toolkit }: ToolkitSectionProps) {
             const absOffset = Math.abs(offset);
 
             // Only render nearby cards
-            if (absOffset > 2) return null;
+            if (absOffset > (isCompact ? 1 : 2)) return null;
 
-            const translateX = offset * 260;
+            const translateX = offset * cardSpacing;
             const translateZ = isCenter
               ? 100
               : -absOffset * 120;
@@ -144,7 +176,7 @@ export default function ToolkitSection({ toolkit }: ToolkitSectionProps) {
                 key={`${tool.name}-${index}`}
                 className="
                   absolute left-1/2 top-1/2
-                  w-[220px] h-[260px]
+                  w-[180px] h-[220px] md:w-[220px] md:h-[260px]
                   rounded-2xl
                   glass-card
                   flex flex-col
@@ -227,6 +259,7 @@ export default function ToolkitSection({ toolkit }: ToolkitSectionProps) {
             absolute right-0 md:right-4 z-30
             w-12 h-12 rounded-full
             border border-surface-variant
+            bg-background/60 backdrop-blur
             flex items-center justify-center
             text-primary
             hover:bg-primary hover:text-background
@@ -241,29 +274,34 @@ export default function ToolkitSection({ toolkit }: ToolkitSectionProps) {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center items-center gap-2 mt-8">
+      <div className="flex flex-wrap justify-center items-center mt-6 md:mt-8 max-w-full">
         {toolkit.map((tool, index) => (
           <button
             key={tool.name}
             onClick={() => setCurrentIndex(index)}
             aria-label={`Go to ${tool.name}`}
-            className={`
-              h-2 rounded-full
-              transition-all duration-500
-              ${
-                index === currentIndex
-                  ? 'w-8 bg-primary'
-                  : 'w-2 bg-outline-variant hover:bg-primary/50'
-              }
-            `}
-          />
+            aria-current={index === currentIndex}
+            className="group p-1.5 md:p-1"
+          >
+            <span
+              className={`
+                block h-2 rounded-full
+                transition-all duration-500
+                ${
+                  index === currentIndex
+                    ? 'w-8 bg-primary'
+                    : 'w-2 bg-outline-variant group-hover:bg-primary/50'
+                }
+              `}
+            />
+          </button>
         ))}
       </div>
 
       {/* Hint */}
       <div className="flex justify-center mt-6">
         <span className="font-label-mono text-[10px] uppercase tracking-[0.2em] text-on-surface-variant">
-          Auto rotating · Click a card to explore
+          Auto rotating · Tap or swipe to explore
         </span>
       </div>
     </section>

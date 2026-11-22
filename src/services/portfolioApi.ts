@@ -52,8 +52,6 @@ export const portfolioApi = {
   },
 
   async getProjects(): Promise<Project[]> {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
     return projects;
   },
 };

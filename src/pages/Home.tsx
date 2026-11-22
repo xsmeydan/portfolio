@@ -6,10 +6,9 @@ import AboutSection from '../components/AboutSection';
 import ToolkitSection from '../components/ToolkitSection';
 import ExperienceSection from '../components/ExperienceSection';
 import WorksSection from '../components/WorksSection';
-import type { Profile, Project, Experience, ToolkitItem } from '../types';
+import type { Project, Experience, ToolkitItem } from '../types';
 
 export default function Home() {
-  const [profile, setProfile] = useState<Profile | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
   const [experience, setExperiences] = useState<Experience[]>([]);
   const [toolkit, setToolkit] = useState<ToolkitItem[]>([]);
@@ -17,17 +16,11 @@ export default function Home() {
 
   useEffect(() => {
     Promise.all([
-      portfolioApi.getProfile(),
       portfolioApi.getProjects(),
       experienceApi.getExperiences(),
       experienceApi.getToolkit(),
     ])
-      .then(([p, proj, experiences, toolkitItems]) => {
-        console.log('projects loaded:', proj);
-        console.log('experience loaded:', experiences);
-        console.log('toolkit loaded:', toolkitItems);
-
-        setProfile(p);
+      .then(([proj, experiences, toolkitItems]) => {
         setProjects(proj.slice(0, 4));
         setExperiences(experiences);
         setToolkit(toolkitItems);
@@ -51,20 +44,20 @@ export default function Home() {
   }, []);
 
   return (
-    <main>
+    <div>
       {/* Hero Section */}
-      <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
+      <section className="relative h-[100svh] min-h-[560px] w-full flex items-center justify-center overflow-hidden">
         <ShaderAnimation />
 
-        <div className="relative z-10 text-center flex flex-col items-center pointer-events-none">
+        <div className="relative z-10 text-center flex flex-col items-center pointer-events-none px-6 max-w-full">
           <h1
-            className="font-display-2xl text-display-2xl text-primary tracking-tighter text-glow md:text-display-2xl text-[80px] leading-[80px] mix-blend-plus-lighter"
+            className="font-display-2xl font-bold text-[52px] leading-[52px] sm:text-[80px] sm:leading-[80px] md:text-display-2xl text-primary tracking-tighter text-glow mix-blend-plus-lighter"
             id="hero-title"
           >
             Sudenur Meydan
           </h1>
 
-          <p className="font-label-mono text-label-mono text-on-surface-variant mt-8 tracking-widest uppercase reveal-on-scroll is-visible">
+          <p className="font-label-mono text-label-mono text-on-surface-variant mt-6 md:mt-8 tracking-widest uppercase reveal-on-scroll is-visible">
             Software Engineer | Backend & AI
           </p>
 
@@ -74,7 +67,7 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+        <div className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
           <span className="font-label-mono text-label-mono text-white uppercase tracking-widest text-[10px] opacity-75">
             Scroll to explore
           </span>
@@ -95,14 +88,6 @@ export default function Home() {
       {/* Selected Works */}
       <WorksSection projects={projects} loading={loading} />
 
-      {loading && <div className="loading">Loading...</div>}
-
-      {!profile && !loading && (
-        <div className="error">
-          Unable to load profile data. Please make sure the backend services
-          are running.
-        </div>
-      )}
-    </main>
+    </div>
   );
 }

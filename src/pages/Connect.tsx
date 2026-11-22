@@ -24,11 +24,11 @@ export default function Connect() {
   };
 
   return (
-    <main className="min-h-screen pt-24 pb-16 px-6 relative">
+    <div className="min-h-screen pt-28 md:pt-32 pb-16 px-6 relative overflow-hidden">
       <ConnectShader />
       <section className="max-w-4xl mx-auto relative z-10">
-        <div className="text-center mb-16">
-          <h1 className="font-display-2xl text-display-2xl text-primary tracking-tighter text-glow mb-4">
+        <div className="text-center mb-12 md:mb-16">
+          <h1 className="font-display-2xl font-bold text-[52px] leading-[56px] sm:text-[80px] sm:leading-[84px] md:text-display-2xl text-primary tracking-tighter text-glow mb-4">
             Let's Connect
           </h1>
           <p className="text-on-surface-variant text-lg max-w-2xl mx-auto">
@@ -36,38 +36,37 @@ export default function Connect() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-12">
+        <div className="grid md:grid-cols-2 gap-10 md:gap-12">
           {/* Contact Info */}
           <div className="space-y-8">
             <div>
-              <h2 className="font-display-lg text-display-lg text-primary mb-4">Get in Touch</h2>
+              <h2 className="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-primary mb-4">Get in Touch</h2>
               <div className="space-y-4">
-                <a href="mailto:sudenurmeydan01@gmail.com" className="block text-on-surface hover:text-primary transition-colors">
+                <a href="mailto:sudenurmeydan01@gmail.com" className="inline-flex items-center min-h-[44px] break-all text-on-surface hover:text-primary transition-colors">
                   sudenurmeydan01@gmail.com
                 </a>
-                <div className="flex gap-4 pt-4">
-                  <a href="https://github.com/SMeydan" target="_blank" rel="noopener noreferrer" 
-                     className="text-on-surface-variant hover:text-primary transition-colors">
-                    GitHub
-                  </a>
-                  <a href="https://www.linkedin.com/in/sudenur-meydan/" target="_blank" rel="noopener noreferrer"
-                     className="text-on-surface-variant hover:text-primary transition-colors">
-                    LinkedIn
-                  </a>
-                  <a href="" target="_blank" rel="noopener noreferrer"
-                     className="text-on-surface-variant hover:text-primary transition-colors">
-                    Twitter
-                  </a>
-                  <a href="https://www.medium.com/@sudenurmeydan01" target="_blank" rel="noopener noreferrer"
-                     className="text-on-surface-variant hover:text-primary transition-colors">
-                    Medium
-                  </a>
+                <div className="flex flex-wrap gap-x-6 gap-y-1 pt-2">
+                  {[
+                    { href: 'https://github.com/SMeydan', label: 'GitHub' },
+                    { href: 'https://www.linkedin.com/in/sudenur-meydan/', label: 'LinkedIn' },
+                    { href: 'https://www.medium.com/@sudenurmeydan01', label: 'Medium' },
+                  ].map(({ href, label }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center min-h-[44px] text-on-surface-variant hover:text-primary transition-colors"
+                    >
+                      {label}
+                    </a>
+                  ))}
                 </div>
               </div>
             </div>
 
             <div>
-              <h2 className="font-display-lg text-display-lg text-primary mb-4">Location</h2>
+              <h2 className="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-primary mb-4">Location</h2>
               <p className="text-on-surface-variant">
                 Istanbul, Turkey<br />
                 Available for remote work worldwide
@@ -142,6 +141,6 @@ export default function Connect() {
           </form>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

@@ -9,17 +9,19 @@ export default function ShaderAnimation() {
 
     function syncSize() {
       if (!canvas) return;
-      const w = canvas.clientWidth || 1280;
-      const h = canvas.clientHeight || 720;
+      // Cap the pixel count so low-power devices are not asked to shade a huge canvas
+      const scale = window.innerWidth < 768 ? 0.6 : 1;
+      const w = Math.round((canvas.clientWidth || 1280) * scale);
+      const h = Math.round((canvas.clientHeight || 720) * scale);
       if (canvas.width !== w || canvas.height !== h) {
         canvas.width = w;
         canvas.height = h;
       }
     }
     
-    if (typeof ResizeObserver !== 'undefined') {
-      new ResizeObserver(syncSize).observe(canvas);
-    }
+    const resizeObserver =
+      typeof ResizeObserver !== 'undefined' ? new ResizeObserver(syncSize) : null;
+    resizeObserver?.observe(canvas);
     syncSize();
 
     const gl = (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')) as WebGLRenderingContext | null;
@@ -140,7 +142,8 @@ void main() {
       }
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    let rafId = 0;
 
     function render(t: number) {
       if (!gl || !canvas) return;
@@ -150,12 +153,14 @@ void main() {
       if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
       if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-      requestAnimationFrame(render);
+      rafId = requestAnimationFrame(render);
     }
 
-    render(0);
+    rafId = requestAnimationFrame(render);
 
     return () => {
+      cancelAnimationFrame(rafId);
+      resizeObserver?.disconnect();
       window.removeEventListener('mousemove', handleMouseMove);
     };
   }, []);

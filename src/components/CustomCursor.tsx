@@ -10,6 +10,9 @@ export default function CustomCursor() {
 
     if (!cursor || !trail) return;
 
+    // Touch devices have no hovering pointer: skip the animation loop entirely
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
 
@@ -66,7 +69,7 @@ export default function CustomCursor() {
       trail.style.borderColor = '#333535';
     };
 
-    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mousemove', handleMouseMove, { passive: true });
 
     const interactables = document.querySelectorAll('.cursor-hover');
 

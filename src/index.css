@@ -1,12 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+html,
+body {
+    overflow-x: clip;
+}
+
 body {
     background-color: #000000;
-    cursor: none;
     overflow-x: hidden;
-    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
 }
 
 html {
     scroll-behavior: smooth;
+}
+
+/* Keep anchored sections clear of the fixed navbar */
+section[id] {
+    scroll-margin-top: 96px;
+}
+
+/* The custom cursor only exists on devices with a precise, hovering pointer */
+@media (hover: hover) and (pointer: fine) {
+    body {
+        cursor: none;
+    }
+}
+
+.custom-cursor,
+.cursor-trail {
+    display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .custom-cursor,
+    .cursor-trail {
+        display: block;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }
 
 .custom-cursor {

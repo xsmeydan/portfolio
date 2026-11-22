@@ -11,7 +11,7 @@ export default function AboutSection() {
       }`}
       id="about"
     >
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-16 items-center">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 items-center">
         <div className="md:col-span-7 md:col-start-2 flex flex-col justify-center">
           <div className="font-label-mono text-label-mono text-secondary-container mb-4 uppercase tracking-widest">
             About Me
@@ -42,13 +42,16 @@ export default function AboutSection() {
           </div>
         </div>
 
-        <div className="md:col-span-4 relative h-[400px] md:h-[500px]">
-          <video 
-            src="/about.mp4" 
-            autoPlay 
-            loop 
-            muted 
+        <div className="md:col-span-4 relative h-[320px] sm:h-[400px] md:h-[500px]">
+          <video
+            src="/about.mp4"
+            poster="/about-poster.webp"
+            autoPlay
+            loop
+            muted
             playsInline
+            preload="metadata"
+            aria-hidden="true"
             className="w-full h-full object-cover rounded-2xl"
           />
         </div>

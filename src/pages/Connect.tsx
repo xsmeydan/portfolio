@@ -76,7 +76,7 @@ export default function Connect() {
                 </a>
                 <div className="flex flex-wrap gap-x-6 gap-y-1 pt-2">
                   {[
-                    { href: 'https://github.com/SMeydan', label: 'GitHub' },
+                    { href: 'https://github.com/xsmeydan', label: 'GitHub' },
                     { href: 'https://www.linkedin.com/in/sudenur-meydan/', label: 'LinkedIn' },
                     { href: 'https://www.medium.com/@sudenurmeydan01', label: 'Medium' },
                   ].map(({ href, label }) => (

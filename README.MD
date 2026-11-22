@@ -64,7 +64,7 @@ The site is intentionally built around a few simple ideas:
 Clone the repository and install the dependencies:
 
 ```bash
-git clone https://github.com/SMeydan/portfolio.git
+git clone https://github.com/xsmeydan/portfolio.git
 cd portfolio
 npm install
 ```

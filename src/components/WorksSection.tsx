@@ -44,7 +44,7 @@ export default function WorksSection({ projects }: WorksSectionProps) {
         </div>
 
         <a
-          href="https://github.com/SMeydan?tab=repositories"
+          href="https://github.com/xsmeydan?tab=repositories"
           target="_blank"
           rel="noopener noreferrer"
           className="font-label-mono text-label-mono text-primary flex items-center gap-2 min-h-[44px] shrink-0 cursor-hover hover:text-primary-container transition-colors group"

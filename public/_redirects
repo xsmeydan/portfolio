@@ -1,0 +1,2 @@
+# Serve the SPA for client-side routes (existing static files are served first)
+/*    /index.html    200

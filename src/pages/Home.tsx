@@ -7,8 +7,16 @@ import ToolkitSection from '../components/ToolkitSection';
 import ExperienceSection from '../components/ExperienceSection';
 import WorksSection from '../components/WorksSection';
 import type { Project, Experience, ToolkitItem } from '../types';
+import { usePageMeta } from '../hooks/usePageMeta';
 
 export default function Home() {
+  usePageMeta({
+    title: 'Sudenur Meydan | Software Engineer — Backend & AI',
+    description:
+      'Sudenur Meydan — Backend Software Engineer in Istanbul focused on fintech and payment systems, .NET and FastAPI services, and AI-powered tools.',
+    path: '/',
+  });
+
   const [projects, setProjects] = useState<Project[]>([]);
   const [experience, setExperiences] = useState<Experience[]>([]);
   const [toolkit, setToolkit] = useState<ToolkitItem[]>([]);

@@ -1,7 +1,15 @@
 import { useState } from 'react';
 import ConnectShader from '../components/ConnectShader';
+import { usePageMeta } from '../hooks/usePageMeta';
 
 export default function Connect() {
+  usePageMeta({
+    title: 'Connect | Sudenur Meydan',
+    description:
+      'Get in touch with Sudenur Meydan, Backend Software Engineer based in Istanbul and open to remote work.',
+    path: '/connect',
+  });
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',

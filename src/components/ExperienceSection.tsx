@@ -65,8 +65,13 @@ export default function ExperienceSection({
           </div>
 
           <img
-            src="/robot.gif"
-            alt="Robot"
+            src="/robot.webp"
+            alt=""
+            aria-hidden="true"
+            width={640}
+            height={360}
+            loading="lazy"
+            decoding="async"
             className="absolute inset-0 w-full h-full object-contain z-10 pointer-events-none transition-transform duration-100 ease-out"
             style={{ transform: `translateY(${robotOffset}px)` }}
           />
@@ -102,6 +107,10 @@ export default function ExperienceSection({
                     <img
                       src={item.imageUrl}
                       alt={`${item.company} logo`}
+                      width={80}
+                      height={80}
+                      loading="lazy"
+                      decoding="async"
                       className="w-14 h-14 sm:w-20 sm:h-20 object-contain rounded-md shrink-0"
                     />
                     <div>

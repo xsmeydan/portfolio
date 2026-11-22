@@ -18,7 +18,7 @@ export default function Blog() {
       date: '2024-01-15',
       readTime: '5 min read',
       category: 'AI',
-      imageUrl: '/gradient.jpg',
+      imageUrl: '/gradient.webp',
       link: '/blog/neural-networks.html'
     },
     {
@@ -28,7 +28,7 @@ export default function Blog() {
       date: '2024-01-10',
       readTime: '8 min read',
       category: 'Backend',
-      imageUrl: '/gradient.jpg',
+      imageUrl: '/gradient.webp',
       link: null
     },
     {
@@ -38,7 +38,7 @@ export default function Blog() {
       date: '2024-01-05',
       readTime: '6 min read',
       category: 'AI',
-      imageUrl: '/gradient.jpg',
+      imageUrl: '/gradient.webp',
       link: null
     },
     {
@@ -48,7 +48,7 @@ export default function Blog() {
       date: '2023-12-28',
       readTime: '4 min read',
       category: 'Best Practices',
-      imageUrl: '/gradient.jpg',
+      imageUrl: '/gradient.webp',
       link: null
     },
     {
@@ -58,7 +58,7 @@ export default function Blog() {
       date: '2023-12-20',
       readTime: '7 min read',
       category: 'Architecture',
-      imageUrl: '/gradient.jpg',
+      imageUrl: '/gradient.webp',
       link: null
     },
     {
@@ -68,7 +68,7 @@ export default function Blog() {
       date: '2023-12-15',
       readTime: '6 min read',
       category: 'Database',
-      imageUrl: '/gradient.jpg',
+      imageUrl: '/gradient.webp',
       link: null
     }
   ];

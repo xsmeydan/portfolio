@@ -46,7 +46,7 @@ export default function ToolkitSection({ toolkit }: ToolkitSectionProps) {
     if (isPaused || toolkit.length === 0) return;
 
     const interval = setInterval(() => {
-      next();
+      setCurrentIndex((prev) => (prev + 1) % toolkit.length);
     }, 3000);
 
     return () => clearInterval(interval);

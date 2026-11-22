@@ -18,7 +18,7 @@ export const toolkit: ToolkitItem[] = [
   { name: "MSSQL", icon: "storage" },
   { name: "MongoDB", icon: "dataset" },
   { name: "Entity Framework", icon: "layers" },
-  { name: "Git", icon: "git" },
+  { name: "Git", icon: "commit" },
   { name: "CI/CD", icon: "rocket_launch" },
   { name: "Kubernetes", icon: "dns" },
   { name: "SonarQube", icon: "rule" },

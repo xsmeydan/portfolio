@@ -1,43 +1,16 @@
-import { useEffect, useState } from 'react';
-import { portfolioApi } from '../services/portfolioApi';
-import { experienceApi } from '../services/experienceApi';
+import { useEffect } from 'react';
+import { projects } from '../services/portfolioApi';
+import { experiences, toolkit } from '../services/experienceApi';
 import ShaderAnimation from '../components/ShaderAnimation';
 import AboutSection from '../components/AboutSection';
 import ToolkitSection from '../components/ToolkitSection';
 import ExperienceSection from '../components/ExperienceSection';
 import WorksSection from '../components/WorksSection';
-import type { Project, Experience, ToolkitItem } from '../types';
 import { usePageMeta } from '../hooks/usePageMeta';
+import { PAGES } from '../seo/pages';
 
 export default function Home() {
-  usePageMeta({
-    title: 'Sudenur Meydan | Software Engineer — Backend & AI',
-    description:
-      'Sudenur Meydan — Backend Software Engineer in Istanbul focused on fintech and payment systems, .NET and FastAPI services, and AI-powered tools.',
-    path: '/',
-  });
-
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [experience, setExperiences] = useState<Experience[]>([]);
-  const [toolkit, setToolkit] = useState<ToolkitItem[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    Promise.all([
-      portfolioApi.getProjects(),
-      experienceApi.getExperiences(),
-      experienceApi.getToolkit(),
-    ])
-      .then(([proj, experiences, toolkitItems]) => {
-        setProjects(proj.slice(0, 4));
-        setExperiences(experiences);
-        setToolkit(toolkitItems);
-      })
-      .catch((err) => {
-        console.error('Home data fetch error:', err);
-      })
-      .finally(() => setLoading(false));
-  }, []);
+  usePageMeta(PAGES.home);
 
   useEffect(() => {
     const hash = window.location.hash.replace('#', '');
@@ -91,10 +64,10 @@ export default function Home() {
       <ToolkitSection toolkit={toolkit} />
 
       {/* Experience Section */}
-      <ExperienceSection experience={experience} />
+      <ExperienceSection experience={experiences} />
 
       {/* Selected Works */}
-      <WorksSection projects={projects} loading={loading} />
+      <WorksSection projects={projects.slice(0, 4)} />
 
     </div>
   );

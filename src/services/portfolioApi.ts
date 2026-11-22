@@ -1,6 +1,6 @@
 import type { Project } from "../types";
 
-const projects: Project[] = [
+export const projects: Project[] = [
   {
     id: 1,
     title: "NiCo",
@@ -45,9 +45,3 @@ const projects: Project[] = [
     imageUrl: "/fenomen.webp",
   },
 ];
-
-export const portfolioApi = {
-  async getProjects(): Promise<Project[]> {
-    return projects;
-  },
-};

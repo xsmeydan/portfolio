@@ -1,5 +1,6 @@
 import type { ToolkitItem } from '../types';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 import { useEffect, useRef, useState } from 'react';
 
 interface ToolkitSectionProps {
@@ -13,9 +14,7 @@ export default function ToolkitSection({ toolkit }: ToolkitSectionProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  const [isCompact, setIsCompact] = useState(
-    () => typeof window !== 'undefined' && window.innerWidth < 768
-  );
+  const isCompact = useMediaQuery('(max-width: 767px)');
   const touchStartX = useRef<number | null>(null);
 
   // Fallback in case the intersection observer never fires
@@ -24,12 +23,6 @@ export default function ToolkitSection({ toolkit }: ToolkitSectionProps) {
     return () => clearTimeout(timer);
   }, []);
 
-  // Tighter card spacing on small screens so cards stay inside the viewport
-  useEffect(() => {
-    const onResize = () => setIsCompact(window.innerWidth < 768);
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  }, []);
 
   const next = () => {
     setCurrentIndex((prev) => (prev + 1) % toolkit.length);

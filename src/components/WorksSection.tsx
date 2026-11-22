@@ -19,10 +19,9 @@ function withCamelCaseBreaks(text: string) {
 
 interface WorksSectionProps {
   projects: Project[];
-  loading: boolean;
 }
 
-export default function WorksSection({ projects, loading }: WorksSectionProps) {
+export default function WorksSection({ projects }: WorksSectionProps) {
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
 
   return (
@@ -58,7 +57,7 @@ export default function WorksSection({ projects, loading }: WorksSectionProps) {
         </a>
       </div>
 
-      {projects.length === 0 && !loading && (
+      {projects.length === 0 && (
         <p className="font-body-sm text-body-sm text-on-surface-variant">
           No projects to show yet.
         </p>

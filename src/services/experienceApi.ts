@@ -79,15 +79,3 @@ export const experiences: Experience[] = [
       "Jul 2020 - Aug 2020. Developed a Python/PyQt application for monitoring and controlling packaging machines with PLC-based data integration.",
   },
 ];
-
-export const experienceApi = {
-  async getExperiences(): Promise<Experience[]> {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    return experiences;
-  },
-
-  async getToolkit(): Promise<ToolkitItem[]> {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    return toolkit;
-  },
-};

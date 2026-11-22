@@ -1,13 +1,9 @@
 import { useState } from 'react';
 import { usePageMeta } from '../hooks/usePageMeta';
+import { PAGES } from '../seo/pages';
 
 export default function Blog() {
-  usePageMeta({
-    title: 'Blog | Sudenur Meydan',
-    description:
-      'Notes, tutorials and insights from Sudenur Meydan on backend development, system design, databases and AI.',
-    path: '/blog',
-  });
+  usePageMeta(PAGES.blog);
 
   const blogPosts: {
     id: number;

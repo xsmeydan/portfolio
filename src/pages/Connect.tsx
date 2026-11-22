@@ -1,16 +1,12 @@
 import { useState } from 'react';
 import ConnectShader from '../components/ConnectShader';
 import { usePageMeta } from '../hooks/usePageMeta';
+import { PAGES } from '../seo/pages';
 
 const CONTACT_FORM_NAME = 'contact';
 
 export default function Connect() {
-  usePageMeta({
-    title: 'Connect | Sudenur Meydan',
-    description:
-      'Get in touch with Sudenur Meydan, Backend Software Engineer based in Istanbul and open to remote work.',
-    path: '/connect',
-  });
+  usePageMeta(PAGES.connect);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -80,7 +76,7 @@ export default function Connect() {
                 </a>
                 <div className="flex flex-wrap gap-x-6 gap-y-1 pt-2">
                   {[
-                    { href: 'https://github.com/SMeydan', label: 'GitHub' },
+                    { href: 'https://github.com/xsmeydan', label: 'GitHub' },
                     { href: 'https://www.linkedin.com/in/sudenur-meydan/', label: 'LinkedIn' },
                     { href: 'https://www.medium.com/@sudenurmeydan01', label: 'Medium' },
                   ].map(({ href, label }) => (

@@ -21,8 +21,18 @@ export default function ConnectShader() {
       }
     }
 
+    // With reduced motion, draw a single still frame instead of animating
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const STILL_FRAME_MS = 8000;
+    let redrawStill: (() => void) | null = null;
+
     const resizeObserver =
-      typeof ResizeObserver !== 'undefined' ? new ResizeObserver(syncSize) : null;
+      typeof ResizeObserver !== 'undefined'
+        ? new ResizeObserver(() => {
+            syncSize();
+            redrawStill?.(); // resizing clears the canvas
+          })
+        : null;
     resizeObserver?.observe(canvas);
     syncSize();
 
@@ -169,10 +179,18 @@ void main() {
       if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
       if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-      rafId = requestAnimationFrame(render);
+      if (!reduceMotion) rafId = requestAnimationFrame(render);
     }
 
-    rafId = requestAnimationFrame(render);
+    if (reduceMotion) {
+      redrawStill = () => {
+        cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(() => render(STILL_FRAME_MS));
+      };
+      redrawStill();
+    } else {
+      rafId = requestAnimationFrame(render);
+    }
 
     return () => {
       cancelAnimationFrame(rafId);

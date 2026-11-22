@@ -1,14 +1,6 @@
 import { useEffect } from 'react';
 
-export const SITE_URL = 'https://sudenurmeydan.netlify.app';
-
-interface PageMeta {
-  title: string;
-  description: string;
-  /** Path of the page, e.g. "/blog". Used for the canonical URL. */
-  path: string;
-  noindex?: boolean;
-}
+import { SITE_URL, type PageMeta } from '../seo/pages';
 
 function setMeta(attr: 'name' | 'property', key: string, content: string) {
   let el = document.head.querySelector<HTMLMetaElement>(`meta[${attr}="${key}"]`);

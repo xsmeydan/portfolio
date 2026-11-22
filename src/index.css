@@ -16,6 +16,32 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Visible keyboard focus on the dark theme (mouse clicks stay ring-free) */
+:focus-visible {
+    outline: 2px solid #00f2ff;
+    outline-offset: 3px;
+}
+
+/* Hidden until focused with the keyboard */
+.skip-link {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 10000;
+    padding: 12px 20px;
+    border-radius: 9999px;
+    background: #00f2ff;
+    color: #002022;
+    font-weight: 600;
+    transform: translateY(-200%);
+    transition: transform 0.2s ease;
+}
+
+.skip-link:focus-visible {
+    transform: translateY(0);
+    outline-color: #e1fdff;
+}
+
 /* Keep anchored sections clear of the fixed navbar */
 section[id] {
     scroll-margin-top: 96px;

@@ -1,7 +1,23 @@
+import { useEffect, useRef } from 'react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 export default function AboutSection() {
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Decorative looping video: keep it still for people who prefer reduced motion
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const mql = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const sync = () => {
+      if (mql.matches) video.pause();
+      else void video.play().catch(() => {});
+    };
+    sync();
+    mql.addEventListener('change', sync);
+    return () => mql.removeEventListener('change', sync);
+  }, []);
 
   return (
     <section
@@ -44,6 +60,7 @@ export default function AboutSection() {
 
         <div className="md:col-span-4 relative h-[320px] sm:h-[400px] md:h-[500px]">
           <video
+            ref={videoRef}
             src="/about.mp4"
             poster="/about-poster.webp"
             autoPlay

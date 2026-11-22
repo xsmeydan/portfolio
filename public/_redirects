@@ -1,2 +1,10 @@
-# Serve the SPA for client-side routes (existing static files are served first)
-/*    /index.html    200
+# Legacy section URLs
+/about      /#about               301
+/projects   /#work                301
+
+# Prerendered pages (see scripts/prerender.mjs)
+/blog       /blog/index.html      200
+/connect    /connect/index.html   200
+
+# Anything else that does not match a file gets dist/404.html with a 404 status
+# (Netlify serves 404.html automatically).

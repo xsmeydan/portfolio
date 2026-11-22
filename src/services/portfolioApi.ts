@@ -1,13 +1,13 @@
 import type { Project } from "../types";
 
-const projects: Project[] = [
+export const projects: Project[] = [
   {
     id: 1,
     title: "NiCo",
     description:
       "An AI agent orchestration system for intelligent task planning, tool execution, context management, and permission-aware workflows.",
     technologies: ["Python", "AI", "LLMs", "MCP", "FastAPI"],
-    gitHubUrl: "https://github.com/SMeydan/NiCo",
+    gitHubUrl: "https://github.com/xsmeydan/NiCo",
     liveUrl: null,
     imageUrl: "/nico.webp",
   },
@@ -18,7 +18,7 @@ const projects: Project[] = [
     description:
       "An AI-powered healthcare platform for intelligent medical information retrieval and patient-focused insights.",
     technologies: ["Python", "FastAPI", "PostgreSQL", "AI"],
-    gitHubUrl: "https://github.com/SMeydan/mednexus-ai",
+    gitHubUrl: "https://github.com/xsmeydan/mednexus-ai",
     liveUrl: null,
     imageUrl: "/mednexus.webp",
   },
@@ -29,7 +29,7 @@ const projects: Project[] = [
     description:
       "A backend platform for manga content management, user interactions, and scalable data services.",
     technologies: ["Python", "FastAPI", "PostgreSQL", "Azure"],
-    gitHubUrl: "https://github.com/SMeydan/MangaPlus",
+    gitHubUrl: "https://github.com/xsmeydan/MangaPlus",
     liveUrl: null,
     imageUrl: "/mangaplus.webp",
   },
@@ -40,14 +40,8 @@ const projects: Project[] = [
     description:
       "A recommendation system for discovering relevant social media influencers based on user preferences and data-driven matching.",
     technologies: ["Python", "Machine Learning", "Recommendation Systems"],
-    gitHubUrl: "https://github.com/SMeydan/FenomenSuggestionSystem",
+    gitHubUrl: "https://github.com/xsmeydan/FenomenSuggestionSystem",
     liveUrl: null,
     imageUrl: "/fenomen.webp",
   },
 ];
-
-export const portfolioApi = {
-  async getProjects(): Promise<Project[]> {
-    return projects;
-  },
-};

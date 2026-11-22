@@ -1,5 +1,6 @@
 import type { ToolkitItem } from '../types';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 import { useEffect, useRef, useState } from 'react';
 
 interface ToolkitSectionProps {
@@ -11,11 +12,13 @@ export default function ToolkitSection({ toolkit }: ToolkitSectionProps) {
   const [forceVisible, setForceVisible] = useState(false);
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+  const [isPaused, setIsPaused] = useState(false); // hover / touch
+  const [hasFocus, setHasFocus] = useState(false); // keyboard focus inside
+  const [isPlaying, setIsPlaying] = useState(true); // explicit play/pause toggle
 
-  const [isCompact, setIsCompact] = useState(
-    () => typeof window !== 'undefined' && window.innerWidth < 768
-  );
+  const isCompact = useMediaQuery('(max-width: 767px)');
+  const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
+  const isAutoRotating = isPlaying && !isPaused && !hasFocus && !prefersReducedMotion;
   const touchStartX = useRef<number | null>(null);
 
   // Fallback in case the intersection observer never fires
@@ -24,12 +27,6 @@ export default function ToolkitSection({ toolkit }: ToolkitSectionProps) {
     return () => clearTimeout(timer);
   }, []);
 
-  // Tighter card spacing on small screens so cards stay inside the viewport
-  useEffect(() => {
-    const onResize = () => setIsCompact(window.innerWidth < 768);
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  }, []);
 
   const next = () => {
     setCurrentIndex((prev) => (prev + 1) % toolkit.length);
@@ -41,16 +38,16 @@ export default function ToolkitSection({ toolkit }: ToolkitSectionProps) {
     );
   };
 
-  // Auto rotate
+  // Auto rotate (WCAG 2.2.2: pausable, and off for reduced motion or while focused)
   useEffect(() => {
-    if (isPaused || toolkit.length === 0) return;
+    if (!isAutoRotating || toolkit.length === 0) return;
 
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % toolkit.length);
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [isPaused, toolkit.length]);
+  }, [isAutoRotating, toolkit.length]);
 
   if (!toolkit.length) return null;
 
@@ -83,6 +80,12 @@ export default function ToolkitSection({ toolkit }: ToolkitSectionProps) {
           ? 'opacity-100 translate-y-0'
           : 'opacity-0 translate-y-20'
         }`}
+      aria-roledescription="carousel"
+      aria-label="Technical toolkit"
+      onFocus={() => setHasFocus(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setHasFocus(false);
+      }}
     >
       {/* Header */}
       <div className="mb-8">
@@ -119,7 +122,7 @@ export default function ToolkitSection({ toolkit }: ToolkitSectionProps) {
           "
           aria-label="Previous technology"
         >
-          <span className="material-symbols-outlined">
+          <span className="material-symbols-outlined" aria-hidden="true">
             arrow_back
           </span>
         </button>
@@ -201,6 +204,7 @@ export default function ToolkitSection({ toolkit }: ToolkitSectionProps) {
                   transformStyle: 'preserve-3d',
                 }}
                 onClick={() => setCurrentIndex(index)}
+                aria-hidden={!isCenter}
               >
                 {/* Icon */}
                 <div
@@ -227,16 +231,17 @@ export default function ToolkitSection({ toolkit }: ToolkitSectionProps) {
                   </span>
                 </div>
 
-                {/* Name */}
+                {/* Name (only legible on the focused card; faded side cards show just the icon) */}
                 <span
-                  className="
+                  className={`
                     font-label-mono
                     text-label-mono
                     text-primary
                     text-center
                     text-sm
                     px-4
-                  "
+                    ${isCenter ? '' : 'invisible'}
+                  `}
                 >
                   {tool.name}
                 </span>
@@ -267,7 +272,7 @@ export default function ToolkitSection({ toolkit }: ToolkitSectionProps) {
           "
           aria-label="Next technology"
         >
-          <span className="material-symbols-outlined">
+          <span className="material-symbols-outlined" aria-hidden="true">
             arrow_forward
           </span>
         </button>
@@ -298,10 +303,29 @@ export default function ToolkitSection({ toolkit }: ToolkitSectionProps) {
         ))}
       </div>
 
-      {/* Hint */}
-      <div className="flex justify-center mt-6">
+      {/* Screen reader announcement of the current item (silent while auto-rotating) */}
+      <p className="sr-only" aria-live={isAutoRotating ? 'off' : 'polite'} aria-atomic="true">
+        {toolkit[currentIndex]?.name}, {currentIndex + 1} of {toolkit.length}
+      </p>
+
+      {/* Hint + play/pause */}
+      <div className="flex justify-center items-center gap-3 mt-4 md:mt-6">
+        {!prefersReducedMotion && (
+          <button
+            type="button"
+            onClick={() => setIsPlaying((playing) => !playing)}
+            aria-label={isPlaying ? 'Pause auto-rotation' : 'Resume auto-rotation'}
+            aria-pressed={!isPlaying}
+            className="w-11 h-11 -my-2 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors"
+          >
+            <span className="material-symbols-outlined text-[20px]" aria-hidden="true">
+              {isPlaying ? 'pause' : 'play_arrow'}
+            </span>
+          </button>
+        )}
         <span className="font-label-mono text-[10px] uppercase tracking-[0.2em] text-on-surface-variant">
-          Auto rotating · <span className="md:hidden">Swipe</span><span className="hidden md:inline">Click a card</span> to explore
+          {isAutoRotating ? 'Auto rotating · ' : ''}
+          <span className="md:hidden">Swipe</span><span className="hidden md:inline">Click a card</span> to explore
         </span>
       </div>
     </section>

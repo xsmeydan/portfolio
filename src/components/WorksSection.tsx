@@ -19,10 +19,9 @@ function withCamelCaseBreaks(text: string) {
 
 interface WorksSectionProps {
   projects: Project[];
-  loading: boolean;
 }
 
-export default function WorksSection({ projects, loading }: WorksSectionProps) {
+export default function WorksSection({ projects }: WorksSectionProps) {
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
 
   return (
@@ -45,7 +44,7 @@ export default function WorksSection({ projects, loading }: WorksSectionProps) {
         </div>
 
         <a
-          href="https://github.com/SMeydan?tab=repositories"
+          href="https://github.com/xsmeydan?tab=repositories"
           target="_blank"
           rel="noopener noreferrer"
           className="font-label-mono text-label-mono text-primary flex items-center gap-2 min-h-[44px] shrink-0 cursor-hover hover:text-primary-container transition-colors group"
@@ -58,7 +57,7 @@ export default function WorksSection({ projects, loading }: WorksSectionProps) {
         </a>
       </div>
 
-      {projects.length === 0 && !loading && (
+      {projects.length === 0 && (
         <p className="font-body-sm text-body-sm text-on-surface-variant">
           No projects to show yet.
         </p>

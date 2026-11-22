@@ -1,8 +1,8 @@
 const footerLinks = [
-  { href: 'https://github.com/SMeydan', label: 'GitHub' },
+  { href: 'https://github.com/xsmeydan', label: 'GitHub' },
   { href: 'https://www.linkedin.com/in/sudenur-meydan/', label: 'LinkedIn' },
   { href: 'https://www.medium.com/@sudenurmeydan01', label: 'Medium' },
-  { href: 'https://github.com/SMeydan/portfolio', label: 'Source' },
+  { href: 'https://github.com/xsmeydan/portfolio', label: 'Source' },
 ];
 
 export default function Footer() {
